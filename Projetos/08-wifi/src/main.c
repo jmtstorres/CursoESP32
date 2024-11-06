@@ -1,7 +1,7 @@
 #include "wrp_wifi.h"
 
-#define EXAMPLE_ESP_WIFI_SSID      "CLARO_2G5106B1"
-#define EXAMPLE_ESP_WIFI_PASS      "hcT1uuN2vf"
+#define EXAMPLE_ESP_WIFI_SSID      "SSID"
+#define EXAMPLE_ESP_WIFI_PASS      "password"
 
 void app_main() {
     //Initialize NVS

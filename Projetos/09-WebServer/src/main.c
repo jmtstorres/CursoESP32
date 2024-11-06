@@ -1,8 +1,8 @@
 #include "wrp_wifi.h"
 #include "wrp_http_srv.h"
 
-#define EXAMPLE_ESP_WIFI_SSID      "CLARO_2G5106B1"
-#define EXAMPLE_ESP_WIFI_PASS      "hcT1uuN2vf"
+#define EXAMPLE_ESP_WIFI_SSID      "SSID"
+#define EXAMPLE_ESP_WIFI_PASS      "password"
 
 /*
     Para teste, em um terminal na mesma rede:
