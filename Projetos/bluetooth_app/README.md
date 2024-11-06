@@ -1,3 +1,4 @@
-# bluetooth_app
+# Curso ESP32
+## Material didático do curso da semana de extensão
 
-A new Flutter project.
+Projeto Flutter de conexão bluetooth serial.
