@@ -11,7 +11,6 @@ extern const uint8_t client_certificate_end[]   asm("_binary_client_certificate_
 extern const uint8_t client_key_start[] asm("_binary_client_key_pem_start");
 extern const uint8_t client_key_end[]   asm("_binary_client_key_pem_end");
 
-esp_http_client_handle_t wrp_http_init_client(const char *ip, int port);
 int wrp_http_post(const char *message, const char *url);
 int wrp_http_get();
 int wrp_http_close();

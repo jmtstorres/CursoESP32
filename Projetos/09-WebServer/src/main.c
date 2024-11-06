@@ -4,6 +4,12 @@
 #define EXAMPLE_ESP_WIFI_SSID      "CLARO_2G5106B1"
 #define EXAMPLE_ESP_WIFI_PASS      "hcT1uuN2vf"
 
+/*
+    Para teste, em um terminal na mesma rede:
+    POST - curl.exe -d "{POST:test}" -H "Content-Type:application/json" -X POST http://192.168.0.118/urip
+    GET - curl.exe -X GET http://192.168.0.118/urig
+ */
+
 void app_main() {
     //Initialize NVS
     esp_err_t ret = nvs_flash_init();

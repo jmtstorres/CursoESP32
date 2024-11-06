@@ -2,33 +2,10 @@
 
 esp_err_t _http_event_handler(esp_http_client_event_t *evt);
 
-char local_response_buffer[1024] = {0};
-esp_http_client_handle_t client = -1;
-char _host[1024] = {0};
-int _port = -1;
+char local_response_buffer[2048] = {0};
 
+//Codigo para servidor local
 //https://stackoverflow.com/questions/77510803/how-to-make-a-simple-https-server-in-python-3x
-
-esp_http_client_handle_t wrp_http_init_client(const char *host, int port){
-    ESP_LOGI(TAG, "Host: %s", host);
-    sprintf(_host, "%s", host);
-    _port = port;
-    esp_http_client_config_t config = {
-        .host = _host,
-        .path = "/",
-        .port = port,
-        .user_data = local_response_buffer,
-        .auth_type = HTTP_AUTH_TYPE_NONE,
-        .event_handler = _http_event_handler,
-        //.skip_cert_common_name_check = true,
-        .client_cert_pem = (const char *)client_certificate_start,
-    };
-    client = esp_http_client_init(&config);
-    if (client < 0){
-        return client;
-    }
-    return ESP_OK;
-}
 
 int wrp_http_post(const char *post_data, const char *url){
     esp_http_client_config_t config = {
@@ -37,7 +14,7 @@ int wrp_http_post(const char *post_data, const char *url){
         .user_data = local_response_buffer,
         .auth_type = HTTP_AUTH_TYPE_NONE,
         //.crt_bundle_attach = esp_crt_bundle_attach,
-        .cert_pem = (const char *)client_certificate_start,
+        //.cert_pem = (const char *)client_certificate_start,
         //.client_key_pem = (const char *)client_key_start,
     };
     esp_http_client_handle_t client = esp_http_client_init(&config);
@@ -55,22 +32,27 @@ int wrp_http_post(const char *post_data, const char *url){
 }
 
 int wrp_http_get(const char *url){
-    esp_http_client_set_url(client, url);
-    esp_http_client_set_method(client, HTTP_METHOD_GET);
-    //esp_http_client_set_header(client, "Content-Type", "text/plain");
+    esp_http_client_config_t config = {
+        .url = url,
+        .event_handler = _http_event_handler,
+        .user_data = local_response_buffer,
+        .auth_type = HTTP_AUTH_TYPE_NONE,
+        .method = HTTP_METHOD_GET,
+    };
+    esp_http_client_handle_t client = esp_http_client_init(&config);
     esp_err_t err = esp_http_client_perform(client);
     if (err == ESP_OK) {
-        ESP_LOGI(TAG, "HTTP GET Status = %d, content_length = %llu",
+        ESP_LOGI(TAG, "HTTPS Status = %d, content_length = %"PRId64,
                 esp_http_client_get_status_code(client),
                 esp_http_client_get_content_length(client));
-        esp_http_client_read_response(client, local_response_buffer, 1024);
+        esp_http_client_read_response(client, local_response_buffer, 2048);
         ESP_LOGI(TAG, "HTTP GET response: %s", local_response_buffer);
         memset(local_response_buffer, 0x00, sizeof(local_response_buffer));
     } else {
         ESP_LOGE(TAG, "HTTP GET request failed: %s", esp_err_to_name(err));
-        wrp_http_close();
     }
-    return err;
+    esp_http_client_close(client);
+    return esp_http_client_cleanup(client);
 }
 
 int wrp_http_close(){
@@ -125,11 +107,9 @@ esp_err_t _http_event_handler(esp_http_client_event_t *evt)
             break;
         case HTTP_EVENT_DISCONNECTED:
             ESP_LOGI(TAG, "HTTP_EVENT_DISCONNECTED");
-            wrp_http_init_client(_host, _port);
             break;
         case HTTP_EVENT_REDIRECT:
-            ESP_LOGI(TAG, "HTTP_EVENT_DISCONNECTED");
-            wrp_http_init_client(_host, _port);
+            ESP_LOGI(TAG, "HTTP_EVENT_REDIRECT");
             break;
     }
     return ESP_OK;

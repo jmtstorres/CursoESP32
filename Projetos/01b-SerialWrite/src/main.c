@@ -47,13 +47,16 @@ void app_main(void)
 
     //Loop para leitura e escrita
     while (1) {
+        //Criando buffer para envio
         sprintf(data, "%s", "Testando 1, 2, 3");
+        //Escrevendo dados na porta serial
         uart_write_bytes(ECHO_UART_PORT_NUM, (const char *) data, strlen(data));
-        //Lendo dados
+        //Zerando buffer
         memset(data, 0x00, BUF_SIZE);
+        //Lendo dados
         int len = uart_read_bytes(ECHO_UART_PORT_NUM, data, (BUF_SIZE - 1), 5000 / portTICK_PERIOD_MS);
-        // Escrevendo dados de volta caso existam
         if (len) {
+            // Se houver dados, mostra o que foi recebido
             data[len] = '\n';
             ESP_LOGI(TAG, "Recv str: %s", (char *) data);
         }

@@ -6,23 +6,6 @@
 #define EXAMPLE_ESP_WIFI_SSID      "CLARO_2G5106B1"
 #define EXAMPLE_ESP_WIFI_PASS      "hcT1uuN2vf"
 
-static void example_https(void *pvParameter)
-{
-    while (1) {
-        int level = gpio_get_level(GPIO_NUM_4);
-        printf("level %d\n", level);
-        if(level == 1){
-            ESP_LOGI(TAG, "Fazendo request");
-            int rc = wrp_http_post("Teste", "https://192.168.0.108:5000?param1=value1&param2=value2");
-            if(rc != ESP_OK){
-                ESP_LOGI(TAG, "Erro: %d", rc);
-            }
-        }
-
-        vTaskDelay(500 / portTICK_PERIOD_MS);
-    }
-}
-
 void app_main() {
     //Initialize NVS
     esp_err_t ret = nvs_flash_init();
@@ -48,6 +31,9 @@ void app_main() {
     }
     ESP_LOGI(TAG, "Conectado.");
 
-    gpio_set_direction(GPIO_NUM_4, GPIO_MODE_DEF_INPUT);
-    xTaskCreate(&example_https, "example_https", 4096, NULL, 5, NULL);
+    ESP_LOGI(TAG, "Fazendo request");
+    rc = wrp_http_get("http://httpbin.org/get");
+    if(rc != ESP_OK){
+        ESP_LOGI(TAG, "Erro: %d", rc);
+    }
 }
