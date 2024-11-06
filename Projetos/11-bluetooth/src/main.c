@@ -24,7 +24,7 @@
 #include "time.h"
 #include "sys/time.h"
 
-#define SPP_TAG "SPP_ACCEPTOR_DEMO"
+#define SPP_TAG "SPP_ACCEPTOR_CURSO"
 #define SPP_SERVER_NAME "SPP_SERVER"
 #define EXAMPLE_DEVICE_NAME "ESP_SPP_ACCEPTOR"
 #define SPP_SHOW_DATA 0

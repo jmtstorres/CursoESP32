@@ -47,14 +47,15 @@ void app_main(void)
 
     //Loop para leitura e escrita
     while (1) {
+        sprintf(data, "%s", "Testando 1, 2, 3");
+        uart_write_bytes(ECHO_UART_PORT_NUM, (const char *) data, strlen(data));
         //Lendo dados
         memset(data, 0x00, BUF_SIZE);
-        int len = uart_read_bytes(ECHO_UART_PORT_NUM, data, (BUF_SIZE - 1), 200 / portTICK_PERIOD_MS);
+        int len = uart_read_bytes(ECHO_UART_PORT_NUM, data, (BUF_SIZE - 1), 5000 / portTICK_PERIOD_MS);
         // Escrevendo dados de volta caso existam
         if (len) {
             data[len] = '\n';
-            uart_write_bytes(ECHO_UART_PORT_NUM, (const char *) data, len);
-            //ESP_LOGI(TAG, "Recv str: %s", (char *) data);
+            ESP_LOGI(TAG, "Recv str: %s", (char *) data);
         }
     }
 }
