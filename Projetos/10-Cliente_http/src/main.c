@@ -3,6 +3,7 @@
 #include "driver/gpio.h"
 #include <freertos/FreeRTOS.h>
 
+//Alterar para o da rede a conectar
 #define EXAMPLE_ESP_WIFI_SSID      "SSID"
 #define EXAMPLE_ESP_WIFI_PASS      "password"
 
@@ -38,6 +39,11 @@ void app_main() {
 
     ESP_LOGI(TAG, "Fazendo request");
     rc = wrp_http_get("http://httpbin.org/get");
+    if(rc != ESP_OK){
+        ESP_LOGI(TAG, "Erro: %d", rc);
+    }
+
+    rc = wrp_http_post("Teste", "http://httpbin.org/post");
     if(rc != ESP_OK){
         ESP_LOGI(TAG, "Erro: %d", rc);
     }

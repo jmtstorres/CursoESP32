@@ -13,6 +13,7 @@ int wrp_http_post(const char *post_data, const char *url){
         .event_handler = _http_event_handler,
         .user_data = local_response_buffer,
         .auth_type = HTTP_AUTH_TYPE_NONE,
+        .method = HTTP_METHOD_POST,
         //.crt_bundle_attach = esp_crt_bundle_attach,
         //.cert_pem = (const char *)client_certificate_start,
         //.client_key_pem = (const char *)client_key_start,
@@ -24,6 +25,8 @@ int wrp_http_post(const char *post_data, const char *url){
         ESP_LOGI(TAG, "HTTPS Status = %d, content_length = %"PRId64,
                 esp_http_client_get_status_code(client),
                 esp_http_client_get_content_length(client));
+        ESP_LOGI(TAG, "HTTP POST response: %s", local_response_buffer);
+        memset(local_response_buffer, 0x00, sizeof(local_response_buffer));
     } else {
         ESP_LOGE(TAG, "Error perform http request %s", esp_err_to_name(err));
     }
@@ -53,11 +56,6 @@ int wrp_http_get(const char *url){
     }
     esp_http_client_close(client);
     return esp_http_client_cleanup(client);
-}
-
-int wrp_http_close(){
-    esp_http_client_cleanup(client);
-    return esp_http_client_close(client);
 }
 
 esp_err_t _http_event_handler(esp_http_client_event_t *evt)

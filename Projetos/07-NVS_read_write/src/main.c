@@ -11,7 +11,7 @@
 #include "esp_log.h"
 #include "esp_spiffs.h"
 
-#define FILE_TEST "/spiffs/hello.txt"
+#define FILE_TEST "hello.txt"
 
 static const char *TAG = "SPIFFS";
 
@@ -32,37 +32,42 @@ void app_main(void)
         .format_if_mount_failed = true};
     //Registrando configuracao
     esp_vfs_spiffs_register(&conf);
-    //size_t total = 0, used = 0;
+    size_t total = 0, used = 0;
     //Recuperando informacoes do disco criado
-    //esp_spiffs_info(conf.partition_label, &total, &used);
+    esp_spiffs_info(conf.partition_label, &total, &used);
 
     // Cria um arquivo e escreve dados
-    FILE *f = fopen(FILE_TEST, "w");
+    char filename[312];
+    memset(filename, 0x00, sizeof(filename));
+    sprintf(filename, "/spiffs/%s", FILE_TEST);
+
+    FILE *f = fopen(filename, "w");
     fprintf(f, "Hello ESP!\n");
     fclose(f);
     ESP_LOGI(TAG, "Criado.");
-    // Abrindo arquivo para leitura
-    ESP_LOGI(TAG, "Lendo arquivo");
-    f = fopen(FILE_TEST, "r");
-    char line[32];
-    fgets(line, sizeof(line), f);
-    fclose(f);
-    char *pos = strchr(line, '\n');
-    if (pos)
-    {
-        *pos = '\0';
-    }
-    ESP_LOGI(TAG, "Lido: '%s'", line);
-
-    // Read files in the directory
+    // Abrindo arquivos no diretório para leitura
+    ESP_LOGI(TAG, "Lendo arquivos");
     DIR *d;
     struct dirent *dir;
     d = opendir("/spiffs");
     if (d)
     {
+        //Listando arquivos no diretório e lendo o conteúdo
         while ((dir = readdir(d)) != NULL)
         {
             ESP_LOGI(TAG, "%s", dir->d_name);
+            memset(filename, 0x00, sizeof(filename));
+            sprintf(filename, "/spiffs/%s", dir->d_name);
+            f = fopen(filename, "r");
+            char line[32];
+            fgets(line, sizeof(line), f);
+            fclose(f);
+            char *pos = strchr(line, '\n');
+            if (pos)
+            {
+                *pos = '\0';
+            }
+            ESP_LOGI(TAG, "Lido: '%s'", line);
         }
         closedir(d);
     }

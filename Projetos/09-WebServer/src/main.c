@@ -1,6 +1,7 @@
 #include "wrp_wifi.h"
 #include "wrp_http_srv.h"
 
+//Alterar para o da rede a conectar
 #define EXAMPLE_ESP_WIFI_SSID      "SSID"
 #define EXAMPLE_ESP_WIFI_PASS      "password"
 

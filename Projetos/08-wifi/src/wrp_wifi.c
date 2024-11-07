@@ -6,6 +6,7 @@ wrp_wifi_st status = WRP_WIFI_ST_DISCONNECTED;
 
 bool initialized = false;
 
+//Handler de eventos
 static void event_handler(
     void* arg, 
     esp_event_base_t event_base,
@@ -38,6 +39,7 @@ static void event_handler(
     }
 }
 
+//Inicializa a estrutura de rede para o WIFI
 int wifi_init(){
     ESP_LOGI(TAG, "Criando event handler");
     s_wifi_event_group = xEventGroupCreate();
@@ -67,19 +69,19 @@ int wifi_init(){
 
     esp_event_handler_instance_t instance_any_id;
     esp_event_handler_instance_t instance_got_ip;
-    rc = esp_event_handler_instance_register(WIFI_EVENT,
-                                                        ESP_EVENT_ANY_ID,
-                                                        &event_handler,
-                                                        NULL,
-                                                        &instance_any_id);
+    rc = esp_event_handler_instance_register(   WIFI_EVENT,
+                                                ESP_EVENT_ANY_ID,
+                                                &event_handler,
+                                                NULL,
+                                                &instance_any_id);
     if(rc != ESP_OK){
         ESP_LOGI(TAG, "Erro: %d", rc);
     }
-    rc = esp_event_handler_instance_register(IP_EVENT,
-                                                        IP_EVENT_STA_GOT_IP,
-                                                        &event_handler,
-                                                        NULL,
-                                                        &instance_got_ip);
+    rc = esp_event_handler_instance_register(   IP_EVENT,
+                                                IP_EVENT_STA_GOT_IP,
+                                                &event_handler,
+                                                NULL,
+                                                &instance_got_ip);
     if(rc != ESP_OK){
         ESP_LOGI(TAG, "Erro: %d", rc);
     }
