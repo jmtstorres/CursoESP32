@@ -6,6 +6,11 @@
 #define EXAMPLE_ESP_WIFI_SSID      "SSID"
 #define EXAMPLE_ESP_WIFI_PASS      "password"
 
+/*
+    Para uso de certificados próprios, os mesmos devem ser declarados nos arquivos de configuraçao
+    src/CMakeLists.txt e platformio.ini
+*/
+
 void app_main() {
     //Initialize NVS
     esp_err_t ret = nvs_flash_init();
